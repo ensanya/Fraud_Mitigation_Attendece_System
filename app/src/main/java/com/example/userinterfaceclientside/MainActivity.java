@@ -39,6 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements PolygonTest.GeofenceCallback {
 
     FusedLocationProviderClient mFusedLocationClient;
@@ -279,9 +282,57 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
     public void onGeofenceCheckResult(boolean insideGeofence) {
         // Display a toast message based on the result of the geofence check
         if (insideGeofence) {
-            Toast.makeText(MainActivity.this, "User is inside a geofence", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Attendence Marked Successfully", Toast.LENGTH_SHORT).show();
+            markAttendance(true); // Mark as present
         } else {
-            Toast.makeText(MainActivity.this, "User is outside a geofence", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Not present ,Outside the geofence area", Toast.LENGTH_SHORT).show();
+            markAttendance(false); // Mark as present
         }
     }
+    private void markAttendance(boolean present) {
+        String employeeId = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+                .getString("employee_id", null);
+        if (employeeId == null) {
+            Log.e("Attendance", "Employee ID is null.");
+            return;
+        }
+
+        DatabaseReference attendanceRef = FirebaseDatabase.getInstance().getReference().child("Employee").child(employeeId).child("attendance");
+
+        // Get the current date in "yyyy-MM-dd" format
+        String currentDateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+        // Check if the attendance for the current date is already marked
+        attendanceRef.child(currentDateString).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Attendance is already marked for today
+                    Log.d("Attendance", "Attendance for today is already marked.");
+                    Toast.makeText(MainActivity.this, "Attendance for today is already marked.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Attendance is not marked yet, proceed to mark it
+                    HashMap<String, Object> attendanceData = new HashMap<>();
+                    attendanceData.put(currentDateString, present ? "Present" : "Absent");
+
+                    attendanceRef.updateChildren(attendanceData).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d("Attendance", "Attendance marked successfully.");
+                            Toast.makeText(MainActivity.this, "Attendance marked successfully.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e("Attendance", "Failed to mark attendance.", task.getException());
+                            Toast.makeText(MainActivity.this, "Failed to mark attendance.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase Error", "Error occurred: " + databaseError.getMessage());
+                Toast.makeText(MainActivity.this, "Failed to check attendance.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
