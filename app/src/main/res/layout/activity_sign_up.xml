@@ -23,8 +23,8 @@
 
     <LinearLayout
         android:id="@+id/editTextContainer"
-        android:layout_width="375dp"
-        android:layout_height="333dp"
+        android:layout_width="325dp"
+        android:layout_height="334dp"
         android:background="@drawable/background_login_singup_block"
         android:elevation="8dp"
         android:orientation="vertical"
@@ -43,7 +43,7 @@
             android:background="@drawable/edittext_border"
             android:hint="Name"
             android:paddingLeft="10dp"
-            android:textSize="20dp" />
+            android:textSize="17dp" />
 
         <EditText
             android:id="@+id/editEmployeeid"
@@ -53,7 +53,7 @@
             android:background="@drawable/edittext_border"
             android:hint="Employee ID"
             android:paddingLeft="10dp"
-            android:textSize="20dp" />
+            android:textSize="17dp" />
 
         <EditText
             android:id="@+id/editBranch"
@@ -63,7 +63,7 @@
             android:background="@drawable/edittext_border"
             android:hint="Branch"
             android:paddingLeft="10dp"
-            android:textSize="20dp" />
+            android:textSize="17dp" />
 
         <EditText
             android:id="@+id/editPassword"
@@ -73,7 +73,7 @@
             android:hint="Password"
             android:inputType="textPassword"
             android:paddingLeft="10dp"
-            android:textSize="20dp" />
+            android:textSize="17dp" />
     </LinearLayout>
 
     <Button
@@ -83,7 +83,7 @@
         android:background="@drawable/background_login_singup_block"
         android:text="Submit"
         android:textColor="@color/editTextBorderColor"
-        android:textSize="28dp"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

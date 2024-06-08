@@ -16,7 +16,7 @@ public class chooseLoginOrSignup extends AppCompatActivity {
         setContentView(R.layout.activity_choose_login_or_sinup);
         btn_login=findViewById(R.id.btn_login);
         btn_signup=findViewById(R.id.btn_signup);
-        btn_main = findViewById(R.id.btn_main);
+        //btn_main = findViewById(R.id.btn_main);
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,13 +32,13 @@ public class chooseLoginOrSignup extends AppCompatActivity {
                 startActivity(lntent);
             }
         });
-        btn_main.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(chooseLoginOrSignup.this, "Main Activity", Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(chooseLoginOrSignup.this,MainActivity.class);
-                startActivity(intent);
-            }
-        });
+//        btn_main.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(chooseLoginOrSignup.this, "Main Activity", Toast.LENGTH_SHORT).show();
+//                Intent intent=new Intent(chooseLoginOrSignup.this,MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }

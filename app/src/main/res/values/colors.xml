@@ -3,4 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="editTextBorderColor">#4C67FF</color>
+    <color name="startColor">#FF5733</color> <!-- Example start color -->
+    <color name="endColor">#C70039</color> <!-- Example end color -->
+    <color name="borderColor">#900C3F</color> <!-- Example border color -->
+    <color name="buttonTextColor">#FFFFFF</color> <!-- Example button text color -->
 </resources>

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -44,12 +45,14 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements PolygonTest.GeofenceCallback {
 
+
     FusedLocationProviderClient mFusedLocationClient;
-    TextView latitudeTextView, longitudeTextView;
+    TextView latitudeTextView, longitudeTextView, attendenceStatus, todaysDate;
     int PERMISSION_ID = 44;
     String employeeId;
     Location currentLocation;
     Button markAttendence;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,15 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
 
         latitudeTextView = findViewById(R.id.latitudeTextView);
         longitudeTextView = findViewById(R.id.longitudeTextView);
+
+        todaysDate = findViewById(R.id.todaysDate);
+        //---------------------------------------------------------------------------------------------
+        Date userDate = new Date();    // Create a date instance for the current date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yyyy", Locale.getDefault());// Define the desired date format
+        String formattedDate = dateFormat.format(userDate);   // Format the date
+        todaysDate.setText(formattedDate);  // Set the formatted date string to the TextView
+        //------------------------------------------------------------------------------------------
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         getLastLocation();
@@ -75,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
         }
 // Mark the studnent attendece
 
-        markAttendence=findViewById(R.id.markAttendence);
+        markAttendence = findViewById(R.id.markAttendence);
         markAttendence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
 
                                     Date userDate = dateFormat.parse(currentDateString);
                                     Date userTime = timeFormat.parse(currentTimeString);
-
 
                                     Log.e(" User Date ", "Error occurred: " + userDate);
                                     Log.e(" Event Date ", "Error occurred: " + eventDateString);
@@ -174,8 +185,35 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
                 });
             }
         });
-    }
+        String ctDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
+        // Check event date from Firebase
+        DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference().child("events");
+        eventRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String eventDateString = dataSnapshot.child("date").getValue(String.class);
+                    if (eventDateString != null && eventDateString.equals(ctDate)) {
+                        // Event date matches current date, check attendance status
+                        checkAttendanceStatus(ctDate);
+                    } else {
+                        // Event date doesn't match current date
+                        Toast.makeText(MainActivity.this, "No event scheduled for today.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // No event data found
+                    Toast.makeText(MainActivity.this, "No event data found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase Error", "Error occurred: " + databaseError.getMessage());
+                Toast.makeText(MainActivity.this, "Failed to check event date.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
     @SuppressLint("MissingPermission")
@@ -289,6 +327,7 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
             markAttendance(false); // Mark as present
         }
     }
+
     private void markAttendance(boolean present) {
         String employeeId = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
                 .getString("employee_id", null);
@@ -308,13 +347,18 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // Attendance is already marked for today
-                    Log.d("Attendance", "Attendance for today is already marked.");
+                    //Log.d("Attendance", "Attendance for today is already marked.");
                     Toast.makeText(MainActivity.this, "Attendance for today is already marked.", Toast.LENGTH_SHORT).show();
                 } else {
                     // Attendance is not marked yet, proceed to mark it
                     HashMap<String, Object> attendanceData = new HashMap<>();
                     attendanceData.put(currentDateString, present ? "Present" : "Absent");
-
+                    attendenceStatus = findViewById(R.id.attendenceStatus);
+                    if (present) {
+                        attendenceStatus.setText("Present");
+                    } else {
+                        attendenceStatus.setText("Absent");
+                    }
                     attendanceRef.updateChildren(attendanceData).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Log.d("Attendance", "Attendance marked successfully.");
@@ -335,4 +379,34 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
         });
     }
 
+    private void checkAttendanceStatus(String currentDate) {
+        // Check attendance status for the current date
+        DatabaseReference attendanceRef = FirebaseDatabase.getInstance().getReference()
+                .child("Employee").child(employeeId).child("attendance").child(currentDate);
+
+        attendanceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String status = dataSnapshot.getValue(String.class);
+                    if (status != null) {
+                        // Attendance is marked for today, update UI
+                        attendenceStatus = findViewById(R.id.attendenceStatus);
+                        attendenceStatus.setText(status);
+                        int color = status.equals("Present") ? Color.GREEN : Color.RED;
+                        attendenceStatus.setTextColor(color);
+                    }
+                } else {
+                    // Attendance is not marked for today
+                    Toast.makeText(MainActivity.this, "Attendance not marked for today.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("Firebase Error", "Error occurred: " + databaseError.getMessage());
+                Toast.makeText(MainActivity.this, "Failed to check attendance.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
