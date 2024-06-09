@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -17,6 +18,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     EditText editName, editEmployeeid, editBranch, editPassword;
     Button submit;
+
+    TextView subtitle;
     DatabaseReference mdatabase;
 
     @Override
@@ -29,6 +32,16 @@ public class SignUpActivity extends AppCompatActivity {
         editBranch = findViewById(R.id.editBranch);
         editPassword = findViewById(R.id.editPassword);
         submit = findViewById(R.id.submit);
+        subtitle =findViewById(R.id.subtitle);
+
+        subtitle.setOnClickListener(new View.OnClickListener(){
+               @Override
+            public void onClick(View v){
+                   Intent intent =new Intent(SignUpActivity.this,LoginActivity.class);
+                   startActivity(intent);
+               }
+        });
+
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

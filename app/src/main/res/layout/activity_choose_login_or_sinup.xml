@@ -10,12 +10,13 @@
 
     <Button
         android:id="@+id/btn_signup"
-        android:layout_width="297dp"
-        android:layout_height="70dp"
+        android:layout_width="283dp"
+        android:layout_height="57dp"
         android:layout_marginTop="250dp"
         android:background="@drawable/gradient_button"
         android:onClick="signUp"
         android:text="Sign Up"
+        android:textColor="@color/white"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,12 +25,13 @@
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="297dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="48dp"
+        android:layout_width="283dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/gradient_button"
         android:onClick="login"
         android:text="Login"
+        android:textColor="@color/white"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

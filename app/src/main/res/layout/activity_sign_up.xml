@@ -1,93 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_and_signup_background"
-    android:padding="16dp">
+    android:background="#FFFFFF"
+    tools:context=".SignUpActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:textColor="@color/white"
-        android:textSize="28dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/editTextContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.802" />
+    <!-- Top Blue Section -->
+    <View
+        android:id="@+id/top_blue_section"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@drawable/blue_background" />
 
+    <!-- Outer Container -->
     <LinearLayout
-        android:id="@+id/editTextContainer"
-        android:layout_width="325dp"
-        android:layout_height="334dp"
-        android:background="@drawable/background_login_singup_block"
-        android:elevation="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="@drawable/containerbg"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.434">
+        android:padding="16dp">
 
-        <EditText
-            android:id="@+id/editName"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_border"
-            android:hint="Name"
-            android:paddingLeft="10dp"
-            android:textSize="17dp" />
+        <!-- Create New Account Section -->
 
-        <EditText
-            android:id="@+id/editEmployeeid"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_border"
-            android:hint="Employee ID"
-            android:paddingLeft="10dp"
-            android:textSize="17dp" />
+        <!-- Input Fields Container -->
 
-        <EditText
-            android:id="@+id/editBranch"
+        <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_border"
-            android:hint="Branch"
-            android:paddingLeft="10dp"
-            android:textSize="17dp" />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Create new \nAccount"
+            android:textColor="@android:color/black"
+            android:textSize="29sp"
+            android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/editPassword"
+        <TextView
+            android:id="@+id/subtitle"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:background="@drawable/edittext_border"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:paddingLeft="10dp"
-            android:textSize="17dp" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="Already Registered? Log in here."
+            android:textColor="@android:color/black"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:id="@+id/input_fields_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:padding="20dp">
+
+            <!-- Name Field -->
+            <TextView
+                android:id="@+id/name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textColor="#808080"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/input_field_background"
+                android:hint="Name"
+                android:padding="12dp" />
+
+            <!-- Department Field -->
+            <TextView
+                android:id="@+id/department_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Department"
+                android:textColor="#808080"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editBranch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/input_field_background"
+                android:hint="web developer"
+                android:padding="12dp" />
+
+            <!-- Employee ID Field -->
+            <TextView
+                android:id="@+id/employee_id_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Employee ID"
+                android:textColor="#808080"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editEmployeeid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/input_field_background"
+                android:hint="23889298"
+                android:padding="12dp" />
+
+            <!-- Password Field -->
+            <TextView
+                android:id="@+id/password_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:textColor="#808080"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/input_field_background"
+                android:hint="******"
+                android:inputType="textPassword"
+                android:padding="12dp" />
+
+            <!-- Sign Up Button -->
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#4A4A4A"
+                android:padding="16dp"
+                android:text="Sign up"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_login_singup_block"
-        android:text="Submit"
-        android:textColor="@color/editTextBorderColor"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextContainer"
-        app:layout_constraintVertical_bias="0.197" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

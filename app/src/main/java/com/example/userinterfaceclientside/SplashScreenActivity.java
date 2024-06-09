@@ -14,7 +14,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private static final int SPLASH_DISPLAY_DURATION = 1000; // 3 seconds
 
     ImageView splashImage;
-    TextView splashText;
+    TextView appNameText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Find splash screen views
         splashImage = findViewById(R.id.splashImage);
-        splashText = findViewById(R.id.splashText);
+        appNameText = findViewById(R.id.appNameText);
 
         // Delay for splash screen and then start the next activity
         new Handler().postDelayed(new Runnable() {
