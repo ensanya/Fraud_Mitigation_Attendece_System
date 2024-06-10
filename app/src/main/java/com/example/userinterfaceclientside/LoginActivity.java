@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
     EditText employeeid, password;
     Button login_btn;
-
+ TextView Login_subtitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,14 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         login_btn = findViewById(R.id.login_btn);
 
+        Login_subtitle=findViewById(R.id.Login_subtitle);
+        Login_subtitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

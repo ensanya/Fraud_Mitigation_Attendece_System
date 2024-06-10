@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/input_field_background"
-                android:hint="web developer"
+                android:hint="ex. web developer"
                 android:padding="12dp" />
 
             <!-- Employee ID Field -->
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/input_field_background"
-                android:hint="23889298"
+                android:hint="ex. 23889298"
                 android:padding="12dp" />
 
             <!-- Password Field -->

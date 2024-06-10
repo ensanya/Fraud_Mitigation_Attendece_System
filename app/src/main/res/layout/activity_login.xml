@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@drawable/input_field_background"
-                android:hint="23889298"
+                android:hint="ex. 23889298"
                 android:padding="12dp" />
 
             <!-- Password Field -->
@@ -105,8 +105,8 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Create New Account"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:textColor="@color/editTextBorderColor"
+                android:textSize="16sp" />
 
         </LinearLayout>
     </LinearLayout>

@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements PolygonTest.Geofe
     public void onGeofenceCheckResult(boolean insideGeofence) {
         // Display a toast message based on the result of the geofence check
         if (insideGeofence) {
-            Toast.makeText(MainActivity.this, "Attendence Marked Successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Inside the Geofence", Toast.LENGTH_SHORT).show();
             markAttendance(true); // Mark as present
         } else {
             Toast.makeText(MainActivity.this, "Not present ,Outside the geofence area", Toast.LENGTH_SHORT).show();

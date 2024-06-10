@@ -7,39 +7,47 @@
     android:background="#FFFFFF"
     tools:context=".MainActivity">
 
+
     <TextView
         android:id="@+id/latitudeTextView"
-        android:layout_width="91dp"
-        android:layout_height="74dp"
+        android:layout_width="336dp"
+        android:layout_height="61dp"
+        android:textSize="20dp"
+        android:text="Latitude"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/longitudeTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.9" />
 
     <TextView
         android:id="@+id/longitudeTextView"
-        android:layout_width="97dp"
-        android:layout_height="74dp"
+        android:layout_width="332dp"
+        android:layout_height="59dp"
+        android:textSize="20dp"
+        android:text="Longitude"
+        android:gravity="center"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/latitudeTextView"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/editTextBorderColor"
+        android:background="#4358D5"
         android:gravity="center"
         android:paddingTop="10dp"
-        android:text="My Attendence "
+        android:paddingBottom="10dp"
+        android:text="Geo-Attendance "
         android:textSize="26dp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +61,8 @@
         android:layout_marginBottom="52dp"
         android:text="Mark My Attendece"
         android:textSize="22dp"
+        android:textColor="@color/white"
+        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -66,10 +76,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/markAttendence"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintVertical_bias="0.643">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,10 +97,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:paddingTop="2dp"
                 android:text="Date "
                 android:textColor="@color/black"
                 android:textSize="15dp"
-                android:paddingTop="2dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -123,7 +133,7 @@
                 android:hint="Present/Absent"
                 android:textColor="#5FCD4C"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
