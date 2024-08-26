@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         login_btn = findViewById(R.id.login_btn);
 
         Login_subtitle=findViewById(R.id.Login_subtitle);
+
+        //go to signup page
         Login_subtitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
