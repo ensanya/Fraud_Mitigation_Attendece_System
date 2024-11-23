@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Employees with Map</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        #map-canvas {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #007bff;
+        }
+
+        #employeeDiv {
+            width: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #007bff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            margin: 0;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tfoot td {
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        @media (min-width: 768px) {
+            #map-canvas {
+                width: 50%;
+            }
+
+            #employeeDiv {
+                width: 50%;
+                margin-left: 20px;
+                margin-top: 15dp;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Display Employees with Map</h1>
+    <hr style="width: 50%;">
+    <div class="container">
+        <div id="map-canvas"></div>
+    
+        <div id="employeeDiv">
+            <h2>Employee Details</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" id="totalEmployees">Total Employees: 0</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <script type="module">
+        // Import Firebase and Google Maps API
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-database.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUr7NOTfIr5ullloLveyVAmfOcrLHSggc",
+            authDomain: "minorprojectdatabase.firebaseapp.com",
+            databaseURL: "https://minorprojectdatabase-default-rtdb.firebaseio.com",
+            projectId: "minorprojectdatabase",
+            storageBucket: "minorprojectdatabase.appspot.com",
+            messagingSenderId: "198546666081",
+            appId: "1:198546666081:web:ee01057a76a785750e7020",
+            measurementId: "G-2HPTPDYG1V"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        // Function to initialize the map
+        function initializeMap() {
+            const mapOptions = {
+                center: { lat: 23.2262371, lng: 77.4689224 },
+                zoom: 15,  
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            return new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        }
+
+        // Function to create marker on the map
+        function createMarker(map, latitude, longitude, title) {
+            const marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: title
+            });
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: title
+            });
+
+            marker.addListener('click', () => {
+                infoWindow.open(map, marker);
+            });
+
+            return marker;
+        }
+
+        // Function to update employee information
+        function updateEmployeeTable(id, name) {
+            const tbody = document.querySelector('#employeeDiv tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${id}</td>
+                <td>${name}</td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        // Function to update the total count of employees
+        function updateTotalCount(count) {
+            const totalEmployees = document.getElementById('totalEmployees');
+            totalEmployees.textContent = `Total Employees: ${count}`;
+        }
+
+        // Function to check if a point is inside a polygon using the Ray Casting algorithm
+        function isPointInPolygon(point, polygon) {
+            let x = point.lat, y = point.lng;
+
+            let inside = false;
+            for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+                let xi = polygon[i].lat, yi = polygon[i].lng;
+                let xj = polygon[j].lat, yj = polygon[j].lng;
+
+                let intersect = ((yi > y) != (yj > y)) &&
+                    (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                if (intersect) inside = !inside;
+            }
+
+            return inside;
+        }
+
+        // Function to get employees from Firebase Realtime Database
+        function listenForLocationChanges() {
+            const employeeRef = ref(db, 'Employee');
+            const map = initializeMap();
+            let markers = {};
+            let totalEmployeesCount = 0;
+
+            const staticCoordinates = [
+                { lat: 23.249056, lng: 77.502035 },
+                { lat: 23.248918, lng: 77.503521 },
+                { lat: 23.248214, lng: 77.503419 },
+                { lat: 23.247701, lng: 77.503156 },
+                { lat: 23.247509, lng:77.502555 },
+                { lat: 23.247597, lng: 77.501879 }
+            ];
+
+            const staticPolygon = new google.maps.Polygon({
+                paths: staticCoordinates,
+                editable: false,
+                draggable: false,
+                fillColor: '#008000',
+                fillOpacity: 0.5
+            });
+
+            staticPolygon.setMap(map);
+
+            onValue(employeeRef, (snapshot) => {
+                const employees = snapshot.val();
+                const tbody = document.querySelector('#employeeDiv tbody');
+                tbody.innerHTML = '';
+                totalEmployeesCount = 0;
+
+                const today = new Date().toISOString().split('T')[0];
+
+                for (const id in employees) {
+                    const attendance = employees[id].attendance || {};
+                    if (attendance[today] === 'Present' && employees[id].location) {
+                        const name = employees[id].name;
+                        const latitude = employees[id].location.latitude;
+                        const longitude = employees[id].location.longitude;
+
+                        const isInPolygon = isPointInPolygon({ lat: latitude, lng: longitude }, staticCoordinates);
+
+                        if (isInPolygon) {
+                            if (!markers[id]) {
+                                markers[id] = createMarker(map, latitude, longitude, `Name: ${name}`);
+                            } else {
+                                markers[id].setPosition({ lat: latitude, lng: longitude });
+                            }
+                            updateEmployeeTable(id, name);
+                            totalEmployeesCount++;
+                        }
+                    }
+                }
+
+                updateTotalCount(totalEmployeesCount);
+            });
+        }
+
+        window.addEventListener('load', () => {
+            listenForLocationChanges();
+        });
+
+        function initMap() {
+            initializeMap();
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiCrGTfruADBtzw01zJeKJ4Lw87-anoYY&libraries=drawing"></script>
+</body>
+</html>
