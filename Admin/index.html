@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps Draw Polygon Get Coordinates</title>
+</head>
+<style>
+    #inbetween {
+        display: flex;
+        align-items: center; /* Vertically center the content */
+        justify-content: center; /* Horizontally center the content */
+        margin: 0;
+    }
+    .background {
+        height: 100vh; /* Ensure full height of the viewport */
+        background-image: url('https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 610px; /* Add height for the background */
+        width: 70%; /* Add width for the background */
+        padding: 20px; /* Add padding for distance from left and right edges */
+        opacity: 0.8; /* Adjust the opacity for a faded effect */
+    }
+    .event-details {
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.9); /* Adjust the opacity for the form */
+        backdrop-filter: blur(10px); /* Add a blur effect to the background */
+        margin: 0 auto; /* Center the form horizontally */
+    }
+    h1, h2 {
+        text-align: center;
+    }
+    .detail {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    .detail h2 {
+        margin-right: 10px;
+        min-width: 120px;
+        font-size: 14px;
+    }
+    input[type="date"],
+    input[type="time"] {
+        flex: 1;
+        font-size: 14px;
+        padding: 8px; /* Increase padding for better visibility */
+        border: 1px solid #ccc; /* Add border for better contrast */
+        border-radius: 3px; /* Add border radius for better appearance */
+    }
+    span {
+        font-size: 14px;
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        height: auto; /* Make the container full height of the viewport */
+    }
+    #saveCoordinates, #trackEmployee {
+        background-color: #4CAF50; /* Green background */
+        border: none; /* No border */
+        color: white; /* White text */
+        padding: 15px 32px; /* Padding */
+        text-align: center; /* Center text */
+        text-decoration: none; /* Remove underline */
+        display: inline-block; /* Display as inline-block */
+        font-size: 16px; /* Font size */
+        margin: 20px 10px; /* Add space and center the button */
+        cursor: pointer; /* Cursor style */
+        border-radius: 10px; /* Rounded corners */
+        transition-duration: 0.4s; /* Transition duration */
+        align-items: center;
+    }
+
+    /* Hover effect */
+    #saveCoordinates:hover, #trackEmployee:hover {
+        background-color: #45a049; /* Darker green */
+    }
+</style>
+<body>
+    <h2>Google Maps Draw Polygon For Geofence</h2>
+    <div class="container">
+        <div id="map-canvas" style="height: 450px; width: 1000px"></div>
+        <div id="info" style="position:absolute; color:red; font-family: Arial; height:200px; font-size: 12px;"></div>
+    </div>
+    <div id="inbetween">
+        <div class="background">
+            <div class="event-details">
+                <h1>Event Details</h1>
+                <div class="detail">
+                    <h2>Date:</h2>
+                    <input type="date" id="event-date">
+                </div>
+                <div class="detail">
+                    <h2>Time:</h2>
+                    <input type="time" id="event-time">
+                </div>
+                <div class="detail">
+                    <h2>Closing Time:</h2>
+                    <input type="time" id="event-closing-time">
+                </div>
+                <div class="detail">
+                    <h2>Location:</h2>
+                    <p>123 Main Street<br>City, State, ZIP Code</p>
+                </div>
+                <button id="saveCoordinates">Create Event </button>
+                <button id="trackEmployee">Track Employee</button>
+               <!-- <div class="detail">
+                    <h2>Additional Information:</h2>
+                    <p>This event will be open from <span id="event-start"></span> to <span id="event-end"></span>.</p>
+                </div>
+                 -->
+            </div>
+        </div>
+    </div>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=drawing"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUr7NOTfIr5ullloLveyVAmfOcrLHSggc",
+            authDomain: "minorprojectdatabase.firebaseapp.com",
+            databaseURL: "https://minorprojectdatabase-default-rtdb.firebaseio.com",
+            projectId: "minorprojectdatabase",
+            storageBucket: "minorprojectdatabase.appspot.com",
+            messagingSenderId: "198546666081",
+            appId: "1:198546666081:web:ee01057a76a785750e7020",
+            measurementId: "G-2HPTPDYG1V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        var coordinates = [];
+
+        function InitMap() {
+            var location = new google.maps.LatLng(23.249056, 77.502035);
+            var mapOptions = {
+                zoom: 16,
+                center: location,
+                mapTypeId: google.maps.MapTypeId.RoadMap
+            };
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            var all_overlays = [];
+            var selectedShape;
+
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYGON,
+                    ]
+                },
+                polygonOptions: {
+                    clickable: true,
+                    draggable: false,
+                    editable: true,
+                    fillColor: '#ADFF2F',
+                    fillOpacity: 0.5,
+                },
+            });
+
+            drawingManager.setMap(map);
+
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', function (event) {
+                var len = event.getPath().getLength();
+                for (var i = 0; i < len; i++) {
+                    coordinates.push(event.getPath().getAt(i).toUrlValue(6));
+                }
+                savePolygonVertices(); // Save coordinates to Firebase
+                document.getElementById('info').innerHTML = coordinates;
+            });
+
+            var getPolygonCoords = function (newShape) {
+                coordinates.splice(0, coordinates.length);
+                var len = newShape.getPath().getLength();
+                for (var i = 0; i < len; i++) {
+                    coordinates.push(newShape.getPath().getAt(i).toUrlValue(6));
+                }
+                document.getElementById('info').innerHTML = coordinates;
+            };
+
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', function (event) {
+                google.maps.event.addListener(event, "dragend", function () {
+                    getPolygonCoords(event);
+                });
+
+                google.maps.event.addListener(event.getPath(), 'insert_at', function () {
+                    getPolygonCoords(event);
+                });
+
+                google.maps.event.addListener(event.getPath(), 'set_at', function () {
+                    getPolygonCoords(event);
+                });
+            });
+        }
+        InitMap();
+
+        // Event listener for the "Save Coordinates" button
+        document.getElementById('saveCoordinates').addEventListener('click', function () {
+            const eventDate = document.getElementById('event-date').value;
+            const eventTime = document.getElementById('event-time').value;
+            const eventClosingTime = document.getElementById('event-closing-time').value;
+
+            if (!eventDate || !eventTime || !eventClosingTime || coordinates.length === 0) {
+                alert("Please fill in all event details and draw a polygon.");
+                return;
+            }
+
+            const eventData = {
+                date: eventDate,
+                time: eventTime,
+                closingTime: eventClosingTime,
+                coordinates: coordinates
+            };
+
+            // Use eventDate as part of the unique key
+            const eventRef = ref(db, 'events/');
+            set(eventRef, eventData)
+                .then(() => {
+                    alert('Event data saved successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error saving event data:', error);
+                });
+        });
+
+        // Event listener for the "Track Employee" button
+        document.getElementById('trackEmployee').addEventListener('click', function () {
+    window.open('TrackUserLocation.html', '_blank');
+});
+
+    </script>
+</body>
+</html>
