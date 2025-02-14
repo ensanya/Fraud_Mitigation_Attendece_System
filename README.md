@@ -1,3 +1,7 @@
+![website4](https://github.com/user-attachments/assets/b478302e-aaae-418c-8794-d81a441b5e98)
+![website3](https://github.com/user-attachments/assets/6c0fc7ca-89d6-4482-bb02-337733f66fec)
+![website2](https://github.com/user-attachments/assets/0d43a9a7-4783-4278-9e4c-e5b478ea18f3)
+![website1](https://github.com/user-attachments/assets/94d9c57b-f3ed-4501-ad06-d51700a8c8f1)
 # **Fraud Mitigation Attendance System Using Geofence**  
 A robust attendance system leveraging **geofencing** and **live location tracking** to prevent fraudulent attendance marking. This project includes:  
 - **Android App** for users.  
