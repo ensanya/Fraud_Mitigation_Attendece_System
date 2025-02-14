@@ -1,7 +1,4 @@
-![website4](https://github.com/user-attachments/assets/b478302e-aaae-418c-8794-d81a441b5e98)
-![website3](https://github.com/user-attachments/assets/6c0fc7ca-89d6-4482-bb02-337733f66fec)
-![website2](https://github.com/user-attachments/assets/0d43a9a7-4783-4278-9e4c-e5b478ea18f3)
-![website1](https://github.com/user-attachments/assets/94d9c57b-f3ed-4501-ad06-d51700a8c8f1)
+
 # **Fraud Mitigation Attendance System Using Geofence**  
 A robust attendance system leveraging **geofencing** and **live location tracking** to prevent fraudulent attendance marking. This project includes:  
 - **Android App** for users.  
@@ -63,3 +60,11 @@ Challenges and Innovations
 Implemented a custom recasting algorithm to compare user location with geofence coordinates.
 Optimized coordinate handling by storing them as a single string in the database and splitting them when needed.
 Addressed Firebase's asynchronous behavior with callbacks for smooth data handling.
+![app4](https://github.com/user-attachments/assets/e7fcfd79-ae43-4978-83d0-cc9cb916bea6)
+![app3](https://github.com/user-attachments/assets/2a5940ce-267e-4725-9484-d2c0a9426464)
+![app2](https://github.com/user-attachments/assets/c53e387f-0ca8-421b-887c-63c2e9497ebd)
+![app1](https://github.com/user-attachments/assets/dffe7a02-e319-4b59-96fa-f001d07dbe9b)
+![website4](https://github.com/user-attachments/assets/b478302e-aaae-418c-8794-d81a441b5e98)
+![website3](https://github.com/user-attachments/assets/6c0fc7ca-89d6-4482-bb02-337733f66fec)
+![website2](https://github.com/user-attachments/assets/0d43a9a7-4783-4278-9e4c-e5b478ea18f3)
+![website1](https://github.com/user-attachments/assets/94d9c57b-f3ed-4501-ad06-d51700a8c8f1)
